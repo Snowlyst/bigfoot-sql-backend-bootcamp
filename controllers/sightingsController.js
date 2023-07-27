@@ -1,8 +1,9 @@
 const BaseController = require("./baseController");
 
 class SightingsController extends BaseController {
-  constructor(model) {
+  constructor(model, commenter) {
     super(model);
+    this.commenter = commenter;
   }
 
   // Retrieve specific sighting
@@ -54,6 +55,68 @@ class SightingsController extends BaseController {
     );
     const sendBack = await this.model.findAll();
     res.json({ sighting: sendBack, message: `Deleted ${editId}` });
+  };
+
+  // these for comments
+  retrieveComments = async (req, res) => {
+    const getId = req.params.id;
+    try {
+      const sendBack = await this.commenter.findAll({
+        where: {
+          sightingId: getId,
+        },
+      });
+      return res.json(sendBack);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json("There is an error");
+    }
+  };
+
+  addComment = async (req, res) => {
+    const getId = req.params.id;
+    const commentData = req.body.data;
+    console.log(commentData);
+    console.log(getId);
+    try {
+      const newComment = await this.commenter.create({
+        content: commentData,
+        sightingId: getId,
+      });
+      console.log(newComment);
+      const sendBack = await this.commenter.findAll({
+        where: {
+          sightingId: getId,
+        },
+      });
+      return res.json(sendBack);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json("ERROR");
+    }
+  };
+
+  deleteComment = async (req, res) => {
+    console.log(req.params);
+    const { getId, deleteId } = req.params;
+    console.log(getId, deleteId);
+    try {
+      const destruction = await this.commenter.destroy({
+        where: {
+          id: deleteId,
+        },
+      });
+      console.log(destruction);
+      const sendBack = await this.commenter.findAll({
+        where: {
+          sightingId: getId,
+        },
+      });
+      return res.json(sendBack);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json("ERROR");
+    }
   };
 }
 
