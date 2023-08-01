@@ -8,8 +8,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // EACH SIGHTING CAN hasMany comments
+      // EACH SIGHTING CAN hasMany comments, but each comment can only belongTo one sighting
       this.hasMany(models.comment);
+      // each sighting can have many categories, and each category can have many sightings
+      this.belongsToMany(models.categories, { through: "sightingCategories" });
     }
   }
   Sighting.init(

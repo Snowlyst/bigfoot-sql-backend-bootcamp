@@ -98,8 +98,8 @@ class SightingsController extends BaseController {
 
   deleteComment = async (req, res) => {
     console.log(req.params);
-    const { getId, deleteId } = req.params;
-    console.log(getId, deleteId);
+    const { sightingId, deleteId } = req.params;
+    console.log(sightingId, deleteId);
     try {
       const destruction = await this.commenter.destroy({
         where: {
@@ -109,7 +109,7 @@ class SightingsController extends BaseController {
       console.log(destruction);
       const sendBack = await this.commenter.findAll({
         where: {
-          sightingId: getId,
+          sightingId: sightingId,
         },
       });
       return res.json(sendBack);
