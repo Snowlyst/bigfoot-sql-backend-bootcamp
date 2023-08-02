@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // EACH SIGHTING CAN hasMany comments, but each comment can only belongTo one sighting
       this.hasMany(models.comment);
       // each sighting can have many categories, and each category can have many sightings
-      this.belongsToMany(models.categories, { through: "sightingCategories" });
+      this.belongsToMany(models.category, { through: "sighting_categories" });
     }
   }
   Sighting.init(
